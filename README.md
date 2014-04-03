@@ -5,7 +5,7 @@ TfInfo.exe is a command line tool to extract data from TFS server and convert it
 to a readable format in a simple way.
 
 This is done by specifying the template file which will be used to process data
-retrieved from TFS.
+retrieved from TFS. You can modify the templates to get the results you want.
 
 Usage
 -----
@@ -75,14 +75,37 @@ Changesets
 ----------
 
 {% for ch in Changes -%}
-* `{{ ch.Id }}` - {{ ch.Comment }} *[{{ ch.FileCount }} files -  {{ ch.Author }} @ {{ ch.CreatedAt }}]*
+* `{{ ch.Id }}` - {{ ch.Comment }} [{{ ch.FileCount }} files -  {{ ch.Author }} @ {{ ch.CreatedAt }}]
 {% for rel in ch.Related -%}
-    * Related: {{ rel.Type }} `#{{ rel.Id }}` **[{{ rel.State | Upcase }}]** - {{ rel.Title }}
+    * Related: {{ rel.Type }} #{{ rel.Id }} [{{ rel.State | Upcase }}] - {{ rel.Title }}
 {% endfor -%}
 {% endfor -%}
 ~~~
 
-Please check other provided templates.
+The output of running `tfinfo.exe` with this template is similar to this:
+
+~~~
+Workitems
+---------
+
+* Task 3363 [CLOSED]: Test task 1
+* User Story 3395 [ACTIVE]: some story
+* Task 3396 [CLOSED]: fix the bugs
+    * Fixed in Changeset 12487
+* Task 3397 [CLOSED]: Add foobar
+    * Fixed in Changeset 12488
+
+Changesets
+----------
+
+* 12488 - added foo & bar [8 files -  Zdeslav Vojković @ 21.3.2013. 12:06:41]
+    * Related: Task 3397 [CLOSED] - Add foobar
+* 12487 - tweaks, fixes, cleanup [22 files -  Zdeslav Vojković @ 19.3.2013. 8:42:30]
+    * Related: Task 3396 [CLOSED] - fix the bugs 
+* 12411 - cleanup, docs [11 files -  Zdeslav Vojković @ 3.3.2013. 15:58:31]
+~~~
+
+Please also check other provided templates.
 
 ### Object model
 
