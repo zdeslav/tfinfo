@@ -1,0 +1,6 @@
+﻿  ID  | Who |    When     | Files | What
+------+-----+-------------+-------+----------------------------------------------
+{% for ch in Changes -%}
+{{ ch.Id }} | {{ ch.AuthorInitials }}  | {{ ch.CreatedAt | Date: "dd.MM.yyyy." }} | {{ ch.FileCount | PadLeft: 4 }}  | {{ ch.Comment }} 
+{% endfor -%}
+

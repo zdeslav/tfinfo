@@ -1,0 +1,7 @@
+﻿{% for item in WorkItems -%}
+{{ item.Type | Upcase }} {{ item.Id }}: {{ item.Title }} [{{ item.State | Upcase }}]
+    * Created: {{ item.Author }} @ {{ item.CreatedAt | Date: "dd.MM.yyyy." }}
+{% for rel in item.Related -%}
+    * {{ rel.Type }} {{ rel.Id }}
+{% endfor -%}
+{% endfor -%}

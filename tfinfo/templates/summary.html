@@ -1,0 +1,149 @@
+﻿<html>
+    <meta charset='utf-8'/>
+    <style type="text/css">
+        body {
+            font-family: Calibri, Verdana, "DejaVu Sans", "Bitstream Vera Sans", "Lucida Sans", Arial, Helvetica, sans-serif;
+            font-size: 100%; /* Allow IE/Win to resize the document */
+            color: black;
+            background: #FFF;
+            margin: 10;
+            padding: 0;
+            border: none;
+        }
+
+        .hidden { /* Used for content that should be displayed */
+            /* by non-stylesheet-aware browsers          */
+            display: none !important;
+        }
+
+        .notprinted { /* Used for content that should not be */
+        }
+        /* printed to paper                    */
+
+
+        /* Headings */
+
+        h1, /* Headings (H1-H6) should only be used in */
+        h2, /* the main content area                   */
+        h3 {
+            font-weight: bold;
+            text-align: left;
+            margin: 1.5em 0 0 0;
+            padding: 0;
+        }
+
+        h4,
+        h5,
+        h6 {
+            font-weight: bold;
+            text-align: left;
+            margin: 1.25em 0 0 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 175%;
+        }
+
+        h2 {
+            font-size: 145%;
+        }
+
+        h3 {
+            font-size: 120%;
+        }
+
+        h4 {
+            font-size: 105%;
+        }
+
+        h5 {
+            font-size: 80%;
+        }
+
+        h6 {
+            font-size: 65%;
+        }
+
+        td {
+            vertical-align: top;
+            padding-right: 16pt;
+        }
+
+        th {
+            text-align: left;
+            padding-right: 16pt;
+        }
+
+        tr {
+            border-bottom: 1px solid #DDD;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+        /* Anchors */
+
+        a:link {
+            text-decoration: none;
+            color: #0066CC;
+            background: transparent;
+        }
+
+        a:visited {
+            text-decoration: none;
+            color: #003399;
+            background: transparent;
+        }
+
+        a:hover,
+        a:active {
+            text-decoration: underline;
+        }
+
+        .lite {
+            color: #999;
+        }
+
+        li:hover,
+        tr:hover {
+            background-color: #DDF;
+        }
+
+    </style>
+</html>
+<body>
+    <h1>Workitems</h1>
+
+    <table>
+        <tr><th>Work item</th><th>State</th><th>Title</th></tr>
+        {% for item in WorkItems -%}
+        <tr>
+            <td><a href="{{ item.FullUri }}">{{ item.Type }} {{ item.Id }}</a></td>
+            <td>{{ item.State | Upcase }}</td>
+            <td><a name="wi_{{ item.Id }}"> {{ item.Title }}</a><br/>
+                {% for rel in item.Related -%}
+                {{ rel.Type }}: <a href="#cs_{{ rel.Id }}">{{ rel.Id }}</a><br/>
+                {% endfor -%}
+            </td>
+        </tr>
+        {% endfor -%}
+    </table>
+
+
+    <h1>Changesets</h1>
+
+    <ul>
+        {% for ch in Changes -%}
+        <li>
+            <a href="{{ ch.FullUri }}">{{ ch.Id }}</a> - <a name="cs_{{ ch.Id }}">{{ ch.Comment }}</a>
+            <i class="lite">[{{ ch.FileCount}} files - {{ ch.Author }} @ {{ ch.CreatedAt }}]</i>
+            <ul>
+                {% for rel in ch.Related -%}
+                <li>Related: <a href="#wi_{{ rel.Id }}">{{ rel.Type }} #{{ rel.Id }}</a> [{{ rel.State | Upcase }}] - {{ rel.Title }}</li>
+                {% endfor -%}
+            </ul>
+        </li>
+        {% endfor -%}
+    </ul>
+</body>

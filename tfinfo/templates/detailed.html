@@ -1,0 +1,96 @@
+﻿<html>
+    <meta charset='utf-8'/>
+    <style type="text/css">
+        body {
+            font-family: Verdana, "DejaVu Sans", "Bitstream Vera Sans", "Lucida Sans", Arial, Helvetica, sans-serif;
+            font-size: 100%; /* Allow IE/Win to resize the document */
+            color: black;
+            background: #FFFFFF;
+            margin: 10pt;
+            padding: 0;
+            border: none;
+        }
+
+        .hidden { display: none !important; }
+ 
+        h1, /* Headings (H1-H6) should only be used in */
+        h2, /* the main content area                   */
+        h3 {
+            font-weight: bold;
+            text-align: left;
+            margin: 1.5em 0 0 0;
+            padding: 0;
+        }
+
+        h4, h5, h6 {
+            font-weight: bold;
+            text-align: left;
+            margin: 1.25em 0 0 0;
+            padding: 0;
+        }
+
+        h1 { font-size: 175%; }
+        h2 { font-size: 145%; }
+        h3 { font-size: 120%; }
+        h4 { font-size: 105%; }
+        h5 { font-size: 80%; }
+        h6 { font-size: 65%; }
+
+        a:link {
+            text-decoration: none;
+            color: #0066CC;
+            background: transparent;
+        }
+
+        a:visited {
+            text-decoration: none;
+            color: #003399;
+            background: transparent;
+        }
+
+        a:hover, a:active { text-decoration: underline; }
+    </style>
+</html>
+<body>
+    <h1>Workitems</h1>
+
+    <ul>
+        {% for item in WorkItems -%}
+        <li>
+            <a href="{{ item.FullUri }}">{{ item.Type }} {{ item.Id }} [{{ item.State | Upcase }}]</a>: <a name="wi_{{ item.Id }}"> {{ item.Title }}</a>
+            <ul>
+                {% for rel in item.Related -%}
+                <li>{{ rel.Type }}: <a href="#cs_{{ rel.Id }}">{{ rel.Id }}</a></li>
+                {% endfor -%}
+            </ul>
+        </li>
+        {% endfor -%}
+    </ul>
+
+
+    <h1>Changesets</h1>
+
+    <ul>
+        {% for ch in Changes -%}
+        <li>
+            <a href="{{ ch.FullUri }}">{{ ch.Id }}</a> - <a name="cs_{{ ch.Id }}">{{ ch.Comment }}</a>
+            <ul>
+                <li>Author: {{ ch.Author }} @ {{ ch.CreatedAt }}</li>
+                {% for rel in ch.Related -%}
+                <li>Related: <a href="#wi_{{ rel.Id }}">{{ rel.Type }} #{{ rel.Id }}</a> [{{ rel.State | Upcase }}] - {{ rel.Title }}</li>
+                {% endfor -%}
+                <li>
+                    Files:
+                    <ul>
+                        {% for file in ch.Changes -%}
+                        <li>{{ file.Type }}  - `{{ file.Path }}`</li>
+                        {% endfor -%}
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {% endfor -%}
+
+
+    </ul>
+</body>

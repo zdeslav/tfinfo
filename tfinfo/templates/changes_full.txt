@@ -1,0 +1,32 @@
+﻿Workitems
+---------
+
+{% for item in WorkItems -%}
+* {{ item.Type }} {{ item.Id }}: {{ item.Title }}
+    * Status:  {{ item.State }} 
+    * Author:  {{ item.Author }} 
+    * Created: {{ item.CreatedAt }}
+    * URL:     {{ item.Uri }}  
+{% for rel in item.Related -%}
+    * {{ rel.Type }} {{ rel.Id }}
+{% endfor -%}
+{% endfor -%}
+
+
+Changesets
+----------
+
+{% for ch in Changes -%}
+* {{ ch.Id }}: {{ ch.Comment }}
+    * Author:  {{ ch.Author }} 
+    * Created: {{ ch.CreatedAt }}
+    * Changed: {{ ch.FileCount }} file[s]
+{% for rel in ch.Related -%}
+    * Related: {{ rel.Type }} #{{ rel.Id }} [{{ rel.State | Upcase }}] - {{ rel.Title }}
+{% endfor -%}
+{% for note in ch.Notes -%}
+    * Note:    {{ note.Name }} - {{ note.Value }}
+{% endfor -%}
+{% endfor -%}
+
+
