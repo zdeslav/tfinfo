@@ -11,7 +11,7 @@ Usage
 -----
 
 ~~~
-tfinfo.exe -c collection -p project -b branch [-t template] [-m N] [--nowi|nocs]
+tfinfo.exe -c collection -p project -b branch [-t template] [-m N] [--cp N] [--nowi|nocs]
 ~~~
  
 Parameters:
@@ -23,6 +23,8 @@ Parameters:
   -t, --template      (Default: summary.txt) template file for output
   --nowi              Skip retrieving work items
   --nocs              Skip retrieving changesets
+  --cp                Number of code page to be used to encode output. If ommitted, 
+                      the default UTF-8 encoding will be used 
   -m, --max_age       NOT IMPLEMENTED! Show only entries from last N days
   --wiq               NOT IMPLEMENTED! Query to select work items to be shown
   --csq               NOT IMPLEMENTED! Query to select changesets to be shown
