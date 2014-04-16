@@ -75,7 +75,11 @@ namespace tfinfo
             Template tpl = Template.Parse(tplText);
 
             var parameters = new RenderParameters() { Context = new Context() };
-            parameters.Context.Push(Hash.FromAnonymousObject(new { WorkItems = data.WorkItems, Changes = data.Changes }));
+            parameters.Context.Push(Hash.FromAnonymousObject(new {
+                WorkItems = data.WorkItems.ToArray(),
+                Changes = data.Changes.ToArray(),
+                Iterations = data.Iterations.ToArray()
+            }));
 
             tpl.Render(Console.Out, parameters);
         }

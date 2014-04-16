@@ -7,8 +7,21 @@ using DotLiquid;
 
 namespace tfinfo
 {
+    [LiquidType("Id", "Name", "StartDate", "FinishDate", "Uri", "WorkItems")]
+    public class Iteration
+    {
+		public Iteration() { WorkItems = new List<WorkItemInfo>(); }
+		public int Id { get; set; }
+		public string Name { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? FinishDate { get; set; }
+		public string Uri { get; set; }
+        public List<WorkItemInfo> WorkItems { get; private set; }		
+
+    }
+
 	[LiquidType("Type", "Id", "Uri", "FullUri", "Title", "State", "Tags", 
-		"Iteration", "Author", "CreatedAt", "Related", "RelatedIds")]
+		"Iteration", "Author", "CreatedAt", "Related", "RelatedIds", "Description")]
 	public class WorkItemInfo
 	{
 		public WorkItemInfo() { Related = new List<WorkItemInfo>(); }
@@ -21,6 +34,8 @@ namespace tfinfo
 		public string Tags { get; set; }
 		public string Author { get; set; }
         public string Iteration { get; set; }
+        public string Description { get; set; }
+        public int IterationId { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public List<WorkItemInfo> Related { get; private set; }		
 		public string RelatedIds // comma separated list of IDs

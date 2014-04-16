@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
+using Microsoft.TeamFoundation.Server;
 
 namespace tfinfo
 {
@@ -13,6 +14,7 @@ namespace tfinfo
     {
         public IList<WorkItemInfo> WorkItems { get; set; }
         public IList<ChangesetInfo> Changes { get; set; }
+        public IList<Iteration> Iterations { get; set; }
 
         internal static TfsInfo Collect(Options options) 
         {
@@ -20,9 +22,32 @@ namespace tfinfo
             TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(collectionUri);
 
             var workItems = GetWorkitems(tpc, options);
-            var changes = GetChangesets(tpc, options);;
+            var changes = GetChangesets(tpc, options);
+            var iterations = GetIterations(tpc, options, workItems);
 
-            return new TfsInfo() { WorkItems = workItems, Changes = changes };		
+            return new TfsInfo() { WorkItems = workItems, Changes = changes, Iterations = iterations };		
+        }
+
+        private static List<Iteration> GetIterations(TfsTeamProjectCollection tpc, Options options, IList<WorkItemInfo> workitems)
+        {
+            var iterations = new List<Iteration>();
+
+            WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+            Project teamProject = workItemStore.Projects[options.Project];
+            var css = tpc.GetService<ICommonStructureService>();
+
+            foreach (Node iter in teamProject.IterationRootNodes)
+            {
+                var i = new Iteration() { Id = iter.Id, Uri = iter.Uri.ToString(), Name = iter.Name };
+                var info = css.GetNode(i.Uri);
+                i.StartDate = info.StartDate;
+                i.FinishDate = info.FinishDate;
+                i.WorkItems.AddRange(workitems.Where(wi => wi.IterationId == i.Id));
+
+                iterations.Add(i);
+            }
+
+            return iterations.OrderByDescending(i => i.StartDate).ToList();
         }
 
         private static IList<ChangesetInfo> GetChangesets(TfsTeamProjectCollection tpc, Options options)
@@ -105,6 +130,8 @@ namespace tfinfo
                     Tags = wi.Tags,
                     Author = wi.CreatedBy,
                     CreatedAt = wi.CreatedDate,
+                    Description = wi.Description,
+                    IterationId = wi.IterationId,
                     Iteration = wi.IterationPath
                 };
                 workItems.Add(info);

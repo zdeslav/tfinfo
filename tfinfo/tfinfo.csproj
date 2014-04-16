@@ -62,6 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="templates\rel_notes.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="templates\detailed.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

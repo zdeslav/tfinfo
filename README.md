@@ -109,13 +109,24 @@ Please also check other provided templates.
 
 ### Object model
 
-Template files take as input a set of .NET objects. `WorkItems` root object is
-a list of `WorkItemInfo` objects, and `Changes` root object is a list of 
-`ChangesetInfo` objects. The attributes of these objects are then used to 
-provide data for templates. Here's the [model](d:\dev\tfinfo\tfinfo\Model.cs) 
-which is currently used:
+Template files take as input a set of .NET objects. `Iterations` root object is
+a list of `Iteration` instances, `WorkItems` root object is a list of 
+`WorkItemInfo` instances, and `Changes` root object is a list of `ChangesetInfo` 
+instances. The attributes of these objects are then used to provide data for 
+templates. Here's the [model](d:\dev\tfinfo\tfinfo\Model.cs) which is currently 
+used:
 
 ~~~{.cs}
+    public class Iteration
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? FinishDate { get; set; }
+        public string Uri { get; set; }
+        public List<WorkItemInfo> WorkItems { get }       
+    }
+
     public class WorkItemInfo
     {
         public string Type { get; set; }
@@ -123,6 +134,7 @@ which is currently used:
         public string Uri { get; set; }
         public string FullUri { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public string State { get; set; }
         public string Tags { get; set; }
         public string Author { get; set; }
