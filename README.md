@@ -157,6 +157,7 @@ used:
         public string Iteration { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<WorkItemInfo> Related { get; }     
+        public List<ChangesetInfo> Changesets { get; private set; }		
         public string RelatedIds { get; } // comma separated list of IDs
     }
 

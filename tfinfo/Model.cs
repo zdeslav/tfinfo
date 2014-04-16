@@ -21,10 +21,15 @@ namespace tfinfo
     }
 
     [LiquidType("Type", "Id", "Uri", "FullUri", "Title", "State", "Tags", 
-        "Iteration", "Author", "CreatedAt", "Related", "RelatedIds", "Description")]
+        "Iteration", "Author", "CreatedAt", "Related", "RelatedIds", 
+        "Changesets", "Description")]
     public class WorkItemInfo
     {
-        public WorkItemInfo() { Related = new List<WorkItemInfo>(); }
+        public WorkItemInfo() 
+        { 
+            Related = new List<WorkItemInfo>();
+            Changesets = new List<ChangesetInfo>();
+        }
         public string Type { get; set; }
         public string Id { get; set; }
         public string Uri { get; set; }
@@ -37,7 +42,8 @@ namespace tfinfo
         public string Description { get; set; }
         public int IterationId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<WorkItemInfo> Related { get; private set; }		
+        public List<WorkItemInfo> Related { get; private set; }
+        public List<ChangesetInfo> Changesets { get; private set; }		
         public string RelatedIds // comma separated list of IDs
         {   
             get { return string.Join(",", Related.Select(r => r.Id)); }

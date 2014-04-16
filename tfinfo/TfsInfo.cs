@@ -21,8 +21,8 @@ namespace tfinfo
             Uri collectionUri = new Uri(options.Collection);
             TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(collectionUri);
 
-            var workItems = GetWorkitems(tpc, options);
             var changes = GetChangesets(tpc, options);
+            var workItems = GetWorkitems(tpc, options, changes);
             var iterations = GetIterations(tpc, options, workItems);
 
             return new TfsInfo() { WorkItems = workItems, Changes = changes, Iterations = iterations };		
@@ -106,11 +106,11 @@ namespace tfinfo
             return changes;
         }
 
-        private static IList<WorkItemInfo> GetWorkitems(TfsTeamProjectCollection tpc, Options options)
+        private static IList<WorkItemInfo> GetWorkitems(TfsTeamProjectCollection tpc, Options options, IList<ChangesetInfo> changesets)
         {
-            var workItems = new List<WorkItemInfo>();
+            var workItems = new Dictionary<string, WorkItemInfo>();
 
-            if (options.NoWorkItems) return workItems;
+            if (options.NoWorkItems) return workItems.Values.ToList();
 
             WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
             Project teamProject = workItemStore.Projects[options.Project];
@@ -134,7 +134,7 @@ namespace tfinfo
                     IterationId = wi.IterationId,
                     Iteration = wi.IterationPath
                 };
-                workItems.Add(info);
+                workItems[info.Id] = info;
 
                 foreach (Link li in wi.Links)
                 {
@@ -153,7 +153,17 @@ namespace tfinfo
                 }
             }
 
-            return workItems;
+            foreach (var cs in changesets)
+            {
+                foreach (var wi in cs.Related)
+                {
+                    WorkItemInfo rel;
+                    if(workItems.TryGetValue(wi.Id, out rel))
+                        rel.Changesets.Add(cs);
+                }
+            }
+
+            return workItems.Values.ToList();
         }
     }
 }
