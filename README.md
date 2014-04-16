@@ -31,6 +31,20 @@ Parameters:
   --help              Display this help screen.
 ~~~
 
+Example:
+
+~~~
+# generate d:\release_notes.md document:
+# - connect to 'http://my.tfs.svr/repos' TFS collection (-c parameter)
+# - fetch data for project 'demo' (-p parameter)
+# - retrieve changesets for 'dev' branch (-b parameter, use full path '$/demo/dev')
+# - based on rel_notes.md template  (-t parameter)
+# - use CP1250 to encode output (--cp parameter)
+# - don't fetch changesets, this template doesn't use them (--nocs parameter)
+
+tfinfo.exe -c http://my.tfs.svr/repos -p demo -b $/demo/dev -t rel_notes.md --cp 1250 > d:\release_notes.md
+~~~
+
 Templates
 ---------
 
