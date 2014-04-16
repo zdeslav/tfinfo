@@ -42,6 +42,9 @@ namespace tfinfo
         [Option('m', "max_age", Required = false, HelpText = "NOT IMPLEMENTED! Show only entries from last N days")]
         public int MaxAge { get; set; }
 
+        [Option("cp", Required = false, HelpText = "Number of code page to be used to encode output. The default encoding is UTF-8")]
+        public int CodePage { get; set; }
+
         [Option("wiq", Required = false, HelpText = "NOT IMPLEMENTED! Query to select work items to be shown")]
         public string WorkItemQuery { get; set; }
 
@@ -67,7 +70,7 @@ namespace tfinfo
                 HelpText.DefaultParsingErrorsHandler(this, help);
             }
 
-            help.AddPreOptionsLine("Usage: tfinfo -c collection -p project -b branch [-t template] [-m N] [--nowi|nocs]");
+            help.AddPreOptionsLine("Usage: tfinfo -c collection -p project -b branch [-t template] [-m N] [--cp N] [--nowi|nocs]");
             help.AddPreOptionsLine(" ");
             help.AddPreOptionsLine("Parameters:");
             help.AddOptions(this);

@@ -25,8 +25,6 @@ namespace tfinfo
     {
         static int Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-
             var options = Options.Parse(args);
             if(options.HaveErrors)
             {
@@ -36,6 +34,9 @@ namespace tfinfo
 
             try
             {
+                var encoding = Encoding.UTF8;
+                if (options.CodePage > 0) encoding = Encoding.GetEncoding(options.CodePage);
+                Console.OutputEncoding = encoding;
                 var templatePath = GetTemplatePath(options.TemplateFile);
                 var data = TfsInfo.Collect(options);
                 Dump(templatePath, data);
